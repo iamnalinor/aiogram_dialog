@@ -23,7 +23,10 @@ class Text(Whenable, BaseWidget, TextWidget):
         """
         if not self.is_(data, manager):
             return ""
-        return await self._render_text(data, manager)
+
+        # Pydantic will fail when the return type is not a string
+        # but LazyProxy. Casting it to a string resolves the issue.
+        return str(await self._render_text(data, manager))
 
     @abstractmethod
     async def _render_text(self, data, manager: DialogManager) -> str:
